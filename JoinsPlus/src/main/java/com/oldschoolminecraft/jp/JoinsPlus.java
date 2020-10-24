@@ -1,11 +1,16 @@
 package com.oldschoolminecraft.jp;
 
+import java.io.File;
+
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JoinsPlus extends JavaPlugin
 {
@@ -16,6 +21,9 @@ public class JoinsPlus extends JavaPlugin
         instance = this;
         
         getServer().getPluginManager().registerEvent(Type.PLAYER_JOIN, new PlayerHandler(), Priority.Normal, this);
+        
+        if (!getMessageDirectory().exists())
+            getMessageDirectory().mkdirs();
         
         System.out.println("JoinsPlus enabled.");
     }
@@ -44,27 +52,27 @@ public class JoinsPlus extends JavaPlugin
                 {
                     if (!player.hasPermission("joinsplus.sudo"))
                     {
-                        player.sendMessage("&cYou don't have permission to use this command!");
+                        player.sendMessage(String.format("%sYou don't have permission to use this command!", ChatColor.RED));
                         return true;
                     }
                     
                     if (args.length < 3)
                     {
-                        player.sendMessage("&cInsufficient parameters.");
-                        player.sendMessage("&cUsage: /cjm sudo <player> <message>");
+                        player.sendMessage(String.format("%sInsufficient parameters.", ChatColor.RED));
+                        player.sendMessage(String.format("%sUsage: /cjm sudo <player> <message>", ChatColor.RED));
                         return true;
                     } else {
                         StringBuilder sb = new StringBuilder();
-                        for (int i = 3; i < args.length; i++)
+                        for (int i = 2; i < args.length; i++)
                             sb.append(args[i] + " ");
                         
-                        String username = args[2];
+                        String username = args[1];
                         String message = sb.toString().trim();
                         
                         if (!message.contains("%player%"))
                         {
-                            player.sendMessage("&cThe join message must contain the \"&b%player%&c\" variable.");
-                            player.sendMessage("&bExample: &&e%player% joined the game.");
+                            player.sendMessage(String.format("%sYour join message must contain the \"%%player%%\" variable.", ChatColor.RED));
+                            player.sendMessage(String.format("%sExample: &e%%player%% joined the game.", ChatColor.AQUA));
                             return true;
                         }
                         
@@ -73,14 +81,14 @@ public class JoinsPlus extends JavaPlugin
                         setMessage(username, message);
                         
                         if (ply == null)
-                            player.sendMessage(String.format("&cCouldn't find an online player that matches '%s', but their join message was set anyway!", username));
+                            player.sendMessage(String.format("%sCouldn't find an online player that matches '%s', but their join message was set anyway!", ChatColor.RED, username));
                         else
-                            player.sendMessage("&aYour join message was changed.");
+                            player.sendMessage(String.format("%sSuccessfully changed join message.", ChatColor.GREEN));
                         return true;
                     }
                 } else if (args[0].equalsIgnoreCase("reset")) {
                     deleteMessage(player.getName());
-                    player.sendMessage("&cYour join message was reset.");
+                    player.sendMessage(String.format("%sYour join message was reset.", ChatColor.GREEN));
                     return true;
                 } else {
                     StringBuilder sb = new StringBuilder();
@@ -90,22 +98,22 @@ public class JoinsPlus extends JavaPlugin
                     
                     if (!message.contains("%player%"))
                     {
-                        player.sendMessage("&cYour join message must contain the \"%player%\" variable.");
-                        player.sendMessage("&bExample: &&e%player% joined the game.");
+                        player.sendMessage(String.format("%sYour join message must contain the \"%%player%%\" variable.", ChatColor.RED));
+                        player.sendMessage(String.format("%sExample: &e%%player%% joined the game.", ChatColor.AQUA));
                         return true;
                     }
                     
                     setMessage(player.getName(), message);
-                    player.sendMessage("&aSuccessfully changed join message.");
+                    player.sendMessage(String.format("%sYour join message was changed.", ChatColor.GREEN));
                     return true;
                 }
             } else {
-                player.sendMessage("&cMissing parameters.");
-                player.sendMessage("&cUsage: /cjm <message>");
+                player.sendMessage(String.format("%sMissing parameters.", ChatColor.RED));
+                player.sendMessage(String.format("%sUsage: /cjm <message>", ChatColor.RED));
                 return true;
             }
         } else if (!player.hasPermission("joinsplus.use")) {
-            player.sendMessage("&cYou don't have permission to use this command!");
+            player.sendMessage(String.format("%sYou don't have permission to use this command!", ChatColor.RED));
             return true;
         }
         
@@ -114,16 +122,38 @@ public class JoinsPlus extends JavaPlugin
     
     public String getMessage(String username)
     {
-        return String.format("&e%s joined the game." + username);
+        try
+        {
+            ObjectMapper mapper = new ObjectMapper();
+            File file = new File(getMessageDirectory(), username + ".json");
+            if (!file.exists()) return "&e" + username + " joined the game.";
+            Message message = mapper.readValue(file, Message.class);
+            return message.message;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "&e" + username + " joined the game.";
+        }
     }
     
     public void setMessage(String username, String message)
     {
-        //TODO
+        try
+        {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writeValue(new File(getMessageDirectory(), username + ".json"), new Message(message));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
     
     public void deleteMessage(String username)
     {
-        //TODO
+        File file = new File(getMessageDirectory(), username + ".json");
+        if (file.exists()) file.delete();
+    }
+    
+    public File getMessageDirectory()
+    {
+        return new File("plugins/JoinsPlus/messages");
     }
 }
