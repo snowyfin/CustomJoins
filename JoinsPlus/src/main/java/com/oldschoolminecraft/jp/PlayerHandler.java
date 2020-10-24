@@ -2,14 +2,26 @@ package com.oldschoolminecraft.jp;
 
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerHandler extends PlayerListener
 {
     public void onPlayerJoin(PlayerJoinEvent event)
     {
-        String message = JoinsPlus.instance.getMessage(event.getPlayer().getName());
+        Message msg = JoinsPlus.instance.loadMessage(event.getPlayer().getName());
+        if (msg == null) msg = new Message();
+        String message = msg.join;
         message = message.replace("%player%", event.getPlayer().getName());
         event.setJoinMessage(translateAlternateColorCodes('&', message));
+    }
+    
+    public void onPlayerQuit(PlayerQuitEvent event)
+    {
+        Message msg = JoinsPlus.instance.loadMessage(event.getPlayer().getName());
+        if (msg == null) msg = new Message();
+        String message = msg.quit;
+        message = message.replace("%player%", event.getPlayer().getName());
+        event.setQuitMessage(translateAlternateColorCodes('&', message));
     }
     
     private String translateAlternateColorCodes(char altColorChar, String textToTranslate)

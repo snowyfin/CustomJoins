@@ -6,12 +6,18 @@ public class Message implements Serializable
 {
     private static final long serialVersionUID = 1L;
     
-    public String message;
+    public String join;
+    public String quit;
     
-    public Message() {}
-    
-    public Message(String message)
+    public Message()
     {
-        this.message = message;
+        this.join = "&e%player% has joined the game.";
+        this.quit = "&e%player% has left the game.";
+    }
+    
+    public Message(String join, String quit)
+    {
+        this.join = join;
+        this.quit = quit;
     }
 }
