@@ -11,8 +11,8 @@ public class Message implements Serializable
     
     public Message()
     {
-        this.join = "&e%player% joined the game.";
-        this.quit = "&e%player% left the game.";
+        this.join = JoinsPlus.instance.config.default_join;
+        this.quit = JoinsPlus.instance.config.default_quit;
     }
     
     public Message(String join, String quit)

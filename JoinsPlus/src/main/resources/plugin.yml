@@ -3,6 +3,10 @@ version: 0
 author: moderator_man
 main: com.oldschoolminecraft.jp.JoinsPlus
 commands:
+    jp:
+        description: JoinsPlus
+        usage: /jp [reload]
+        default: op
     cjm:
         description: Manage your custom join message.
         usage: /cjm [sudo [player]] <message>

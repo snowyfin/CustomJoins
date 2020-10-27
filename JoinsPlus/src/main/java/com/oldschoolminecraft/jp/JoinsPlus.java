@@ -16,6 +16,8 @@ public class JoinsPlus extends JavaPlugin
 {
     public static JoinsPlus instance;
     
+    public Config config;
+    
     public void onEnable()
     {
         instance = this;
@@ -25,10 +27,43 @@ public class JoinsPlus extends JavaPlugin
         getServer().getPluginManager().registerEvent(Type.PLAYER_JOIN, handler, Priority.Normal, this);
         getServer().getPluginManager().registerEvent(Type.PLAYER_QUIT, handler, Priority.Normal, this);
         
+        if (!getPluginDirectory().exists())
+            getPluginDirectory().mkdirs();
         if (!getMessageDirectory().exists())
             getMessageDirectory().mkdirs();
         
+        if (!getConfigFile().exists())
+        {
+            config = new Config("&e%player% joined the game.", "&e%player% left the game.");
+            saveConfig();
+        } else {
+            loadConfig();
+        }
+        
         System.out.println("JoinsPlus enabled.");
+    }
+    
+    public void loadConfig()
+    {
+        try
+        {
+            ObjectMapper mapper = new ObjectMapper();
+            Config config = mapper.readValue(getConfigFile(), Config.class);
+            this.config = config;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public void saveConfig()
+    {
+        try
+        {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writeValue(getConfigFile(), config);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
     
     public void onDisable()
@@ -38,6 +73,23 @@ public class JoinsPlus extends JavaPlugin
     
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
+        // jp [reload]
+        if (label.equalsIgnoreCase("jp"))
+        {
+            if (args.length > 0)
+            {
+                if (args[0].equalsIgnoreCase("reload"))
+                {
+                    loadConfig();
+                    return true;
+                }
+            } else {
+                sender.sendMessage(ChatColor.GRAY + "JoinsPlus by moderator_man");
+                sender.sendMessage(ChatColor.GRAY + "You can reload the config with /jp reload");
+                return true;
+            }
+        }
+        
         if (!(sender instanceof Player))
         {
             sender.sendMessage("This command can only be used by players!");
@@ -256,9 +308,19 @@ public class JoinsPlus extends JavaPlugin
             ex.printStackTrace();
         }
     }
+    
+    public File getPluginDirectory()
+    {
+        return new File("plugins/JoinsPlus");
+    }
 
     public File getMessageDirectory()
     {
-        return new File("plugins/JoinsPlus/messages");
+        return new File(getPluginDirectory(), "messages");
+    }
+    
+    public File getConfigFile()
+    {
+        return new File(getPluginDirectory(), "config.json");
     }
 }
