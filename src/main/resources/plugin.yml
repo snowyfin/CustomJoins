@@ -1,17 +1,24 @@
-name: JoinsPlus
-version: 0
-author: moderator_man
-main: com.oldschoolminecraft.jp.JoinsPlus
+name: ${project.name}
+description: ${project.description}
+version: ${project.version}
+main: org.betamc.bjp.BJoinsPlus
+authors: 
+    - moderator_man
+    - SvGaming
+
 commands:
     jp:
-        description: JoinsPlus
+        description: Main BJoinsPlus command
         usage: /jp [reload]
         default: op
+        aliases: [bjp, bjoinsplus, joinsplus]
     cjm:
         description: Manage your custom join message.
         usage: /cjm [sudo [player]] <message>
         default: op
+        aliases: [customjoinmessage]
     clm:
         description: Manage your custom quit message.
         usage: /clm [[sudo [player]] <message>
         default: op
+        aliases: [customleavemessage]

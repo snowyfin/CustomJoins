@@ -1,4 +1,4 @@
-package com.oldschoolminecraft.jp;
+package org.betamc.bjp;
 
 public class Config
 {

@@ -1,4 +1,4 @@
-package com.oldschoolminecraft.jp;
+package org.betamc.bjp;
 
 import java.io.Serializable;
 
@@ -11,8 +11,8 @@ public class Message implements Serializable
     
     public Message()
     {
-        this.join = JoinsPlus.instance.config.default_join;
-        this.quit = JoinsPlus.instance.config.default_quit;
+        this.join = BJoinsPlus.instance.config.default_join;
+        this.quit = BJoinsPlus.instance.config.default_quit;
     }
     
     public Message(String join, String quit)

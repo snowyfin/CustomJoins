@@ -1,4 +1,4 @@
-package com.oldschoolminecraft.jp;
+package org.betamc.bjp;
 
 import java.io.File;
 
@@ -12,9 +12,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class JoinsPlus extends JavaPlugin
+public class BJoinsPlus extends JavaPlugin
 {
-    public static JoinsPlus instance;
+    public static BJoinsPlus instance;
     
     public Config config;
     

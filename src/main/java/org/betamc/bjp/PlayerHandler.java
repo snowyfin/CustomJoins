@@ -1,4 +1,4 @@
-package com.oldschoolminecraft.jp;
+package org.betamc.bjp;
 
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
@@ -8,7 +8,7 @@ public class PlayerHandler extends PlayerListener
 {
     public void onPlayerJoin(PlayerJoinEvent event)
     {
-        Message msg = JoinsPlus.instance.loadMessage(event.getPlayer().getName());
+        Message msg = BJoinsPlus.instance.loadMessage(event.getPlayer().getName());
         if (msg == null) msg = new Message();
         String message = msg.join;
         message = message.replace("%player%", event.getPlayer().getName());
@@ -17,7 +17,7 @@ public class PlayerHandler extends PlayerListener
     
     public void onPlayerQuit(PlayerQuitEvent event)
     {
-        Message msg = JoinsPlus.instance.loadMessage(event.getPlayer().getName());
+        Message msg = BJoinsPlus.instance.loadMessage(event.getPlayer().getName());
         if (msg == null) msg = new Message();
         String message = msg.quit;
         message = message.replace("%player%", event.getPlayer().getName());
