@@ -1,4 +1,4 @@
-#A plugin for b1.7.3 Poseidon servers that allows players to change custom join messages.
+# A plugin for b1.7.3 Poseidon servers that allows players to change custom join messages.
 
 ## Commands:
  - /jp
