@@ -5,6 +5,7 @@ main: org.betamc.bjp.BJoinsPlus
 authors: 
     - moderator_man
     - SvGaming
+    - snowyfin
 
 commands:
     jp:
