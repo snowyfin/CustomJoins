@@ -1,6 +1,6 @@
 A plugin for b1.7.3 Poseidon servers that allows players to change custom join messages.
 
-Commands:
+# Commands:
  - /jp
      - Reload
          - Reloads the config
@@ -17,6 +17,6 @@ Commands:
      - Aliases
          - customleavemessage
  - For users with sudo privelages, use /cjm or /clm sudo player to change another players custom join message
-Permission nodes:
+# Permission nodes:
  - joinsplus.use
  - joinsplus.sudo
